@@ -1,0 +1,62 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://autoplay.gd" type="Script" id=1]
+[ext_resource path="res://recursive_clone.gd" type="Script" id=2]
+
+[sub_resource type="Animation" id=1]
+resource_name = "test"
+length = 32.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("CSGBox2:rotation_degrees")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 4, 8.1, 12.1, 16.1, 20, 24, 28.1, 31.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, 0 ), Vector3( 0, 8, 0 ), Vector3( 0, -8, 0 ), Vector3( -8, 0, 0 ), Vector3( 0, 0, 0 ), Vector3( 0, 0, -10.33 ), Vector3( 0, 0, -6.88667 ), Vector3( 0, 0, 0 ), Vector3( 10.2223, 12.0867, -8.64965 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("CSGBox2:translation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = false
+tracks/1/keys = {
+"times": PoolRealArray(  ),
+"transitions": PoolRealArray(  ),
+"update": 0,
+"values": [  ]
+}
+
+[node name="Spatial" type="Spatial"]
+transform = Transform( 1, 0.000111092, -0.000596271, -0.000110684, 1, 0.000675166, 0.000596347, -0.000675099, 1, 0, 0, 0 )
+
+[node name="CSGBox" type="CSGBox" parent="."]
+transform = Transform( 1, 1.98952e-13, 1.16415e-10, 1.36708e-11, 1, 0, 0, 0, 1, 0, 0, 0 )
+depth = 2.6379
+
+[node name="CSGBox2" type="CSGBox" parent="."]
+transform = Transform( 0.961122, 0.183796, 0.206067, -0.148005, 0.972933, -0.177468, -0.233108, 0.140069, 0.962309, 1.28057e-09, 1.31549e-08, -2.80724 )
+depth = 2.6379
+
+[node name="RecursiveClone" type="Node" parent="."]
+script = ExtResource( 2 )
+original = NodePath("../CSGBox")
+clone = NodePath("../CSGBox2")
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 0.621406, -0.0320114, 0.782835, 0.00144274, 0.99921, 0.0397141, -0.783488, -0.0235491, 0.620961, 13.3852, 5.54247, 0.697491 )
+current = true
+
+[node name="Camera2" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 1.23837, 11.2393, -9.69829 )
+projection = 1
+size = 24.3172
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/test = SubResource( 1 )
+script = ExtResource( 1 )
