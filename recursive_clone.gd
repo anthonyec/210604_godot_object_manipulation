@@ -1,7 +1,9 @@
 extends Node
 
+export var enabled: bool = true
 export var original: NodePath
 export var clone: NodePath
+export var clones_amount: int = 10;
 
 var clone_count: int = 0
 
@@ -22,18 +24,25 @@ func _clone(from: Spatial, to: Spatial):
 	var duplicated_node: Spatial = from.duplicate()
 	var translate_difference = to.global_transform.origin - from.global_transform.origin
 	var rotation_difference = to.rotation - from.rotation
+
 	
 	# TODO: Is there an easier way to do this? I understand on a high-level why 
 	# this was needed but I don't understand the actual maths behind it.
 	var new_direction = _rotate_vector_by_quaternion(translate_difference, Quat(rotation_difference))
 	
-	DebugDraw.draw_ray_3d(
-		from.global_transform.origin,
-		new_direction.normalized(),
-		new_direction.length(), 
-		Color.red
-	);
-		
+#	DebugDraw.draw_ray_3d(
+#		from.global_transform.origin,
+#		new_direction.normalized(),
+#		new_direction.length(), 
+#		Color.red
+#	);
+
+#	DebugDraw.draw_line_3d(
+#		from.global_transform.origin,
+#		to.global_transform.origin,
+#		Color.red
+#	);
+#
 	duplicated_node.name += '_clone_' + String(clone_count)
 	clone_count += 1
 	
@@ -59,12 +68,12 @@ func _ready():
 	var orginal_node: Spatial = get_node(original)
 	var clone_node: Spatial = get_node(clone)
 	
-	_clone_recursive(orginal_node, clone_node, 10);
+#	_clone_recursive(orginal_node, clone_node, clones_amount);
 	
 	pass
 
 func _process(delta):
-	if false:
+	if !enabled:
 		return
 		
 	if self.get_children().size() > 0:
@@ -74,5 +83,5 @@ func _process(delta):
 	var orginal_node: Spatial = get_node(original)
 	var clone_node: Spatial = get_node(clone)
 
-	_clone_recursive(orginal_node, clone_node, 20);
+	_clone_recursive(orginal_node, clone_node, clones_amount);
 	pass
