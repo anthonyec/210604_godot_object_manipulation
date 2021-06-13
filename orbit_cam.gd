@@ -21,15 +21,13 @@ var keys = {
 	"move_up": KEY_W,
 	"move_down": KEY_S,
 	"camera_slow_mod": KEY_SHIFT,
-	"change_projection": KEY_P
+	"change_projection": KEY_P,
+	"save": KEY_I,
+	"load": KEY_L
 }
 
 var mouseButtons = {
 	"camera_aim": BUTTON_RIGHT
-}
-
-var joystickAxis = {
-	# TODO: Implement
 }
 
 func add_input_actions():
@@ -46,6 +44,7 @@ func add_input_actions():
 		InputMap.action_add_event(mouseButton, eventButton)
 
 func _ready():
+	load_camera()
 	add_input_actions()
 
 	target_object = get_node(target_path)
@@ -107,6 +106,44 @@ func _input(event):
 		else:
 			self.projection = 0
 			self.size = 70
+			
+	if event.is_action_pressed("save"):
+		self.save_camera()
+		
+	if event.is_action_pressed("load"):
+		self.load_camera()
 	
 
+func save_camera():
+	var save_game = File.new()
+	var data = to_json({
+		"pos_x": self.global_transform.origin.x,
+		"pos_y": self.global_transform.origin.y,
+		"pos_z": self.global_transform.origin.z,
+		"rot_x": self.rotation.x,
+		"rot_y": self.rotation.y,
+		"rot_z": self.rotation.z
+	})
+	
+	save_game.open("user://dev_cam.save", File.WRITE)
+	save_game.store_line(data);
+	
+	save_game.close()	
+
+	
+func load_camera():
+	var save_game = File.new()
+	
+	if not save_game.file_exists("user://dev_cam.save"):
+		print("No saved data for dev cam")
+		return
+		
+	save_game.open("user://dev_cam.save", File.READ)
+	
+	while save_game.get_position() < save_game.get_len():
+		var node_data = parse_json(save_game.get_line())
+		self.global_transform.origin = Vector3(node_data["pos_x"], node_data["pos_y"], node_data["pos_z"])
+		self.rotation = Vector3(node_data["rot_x"], node_data["rot_y"], node_data["rot_z"])
+	
+	save_game.close()
 
