@@ -44,10 +44,11 @@ func _quadratic_bezier(p0: Vector3, p1: Vector3, p2: Vector3, t: float):
 		return r
 		
 func _clone_inbetween_recursive(from: Spatial, to: Spatial, times: float):
+	var gap = (1 / times)
 	var middle = from.global_transform.origin.linear_interpolate(to.global_transform.origin, 0.5)
 	var difference_direction = to.global_transform.origin.direction_to(from.global_transform.origin)
-	var direction_rotated = _rotate_vector_by_quaternion(difference_direction, Quat(to.rotation))
-	var gap = (1 / times)
+#	var direction_rotated = _rotate_vector_by_quaternion(difference_direction, Quat(to.rotation))
+	var direction_rotated = to.global_transform.basis.z + Vector3(0, -0.28, 0.18)
 	var plane = Plane(-difference_direction, Vector3.ZERO.distance_to(middle))
 	var intersection = plane.intersects_ray(to.global_transform.origin, direction_rotated);
 	
